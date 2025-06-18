@@ -11,7 +11,7 @@ Follow these instructions to get the project up and running on your local machin
 - Python 3.12+
 - [uv](https://github.com/astral-sh/uv) (a fast Python package installer and resolver)
 
-### Installation
+### Installation & Setup
 
 1.  **Clone the repository:**
     ```bash
@@ -19,38 +19,38 @@ Follow these instructions to get the project up and running on your local machin
     cd autointake
     ```
 
-2.  **Install the dependencies:**
-    Use `uv` to install the required packages from `pyproject.toml`.
+2.  **Create a virtual environment:**
+    It's recommended to use a virtual environment to manage dependencies.
     ```bash
-    uv pip install -e .
+    python -m venv venv
+    source venv/bin/activate
     ```
 
+3.  **Install dependencies:**
+    Use `uv` to install the required packages.
+    ```bash
+    uv pip install -r requirements.txt
+    ```
+
+4.  **Set up environment variables:**
+    Create a `.env` file in the `autointake` directory by copying the example file. This file contains the database connection string and other secrets.
+    ```bash
+    cp .env.example .env
+    ```
+    Then, edit the `.env` file with your actual database credentials.
+
 ## Running the Application
-
-You will need two separate terminals to run the application and the simulation script.
-
-**Terminal 1: Start the Web Server**
 
 This command starts the FastAPI server. The `--reload` flag will automatically restart the server when you make changes to the code.
 
 ```bash
-uv run start
-```
-or directly:
-```bash
-uvicorn main:app --host 0.0.0.0 --port 8000
+python autointake/main.py
 ```
 
-**Terminal 2: Run the Intake Simulation**
+## Running Tests
 
-This script sends a test webhook to the running application to simulate a new patient intake.
+To run the tests, use the following command:
 
 ```bash
-uv run test
+pytest
 ```
-or directly:
-```bash
-python test_intake.py
-```
-
-You should see output in the first terminal indicating that the webhook was received successfully.
