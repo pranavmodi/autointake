@@ -41,4 +41,4 @@ def simulate_new_intake():
         print(f"Error sending webhook: {e}")
 
 if __name__ == "__main__":
-    simulate_new_intake() 
+    simulate_new_intake()
