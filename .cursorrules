@@ -1,0 +1,9 @@
+
+
+This is a python based repository for AI-Driven Intake & Appointment Reminder System for a company called Precise Imaging
+
+
+We are implementing an AI-driven patient intake system to optimize scheduling, reduce no-shows, and ensure all necessary documents are completed before a patient’s visit. The system will integrate with RadFlow 360 to track intake status, automate reminders via SMS and voice calls, and provide real-time AI assistance.  Human call will be used as last step to try and get the intake completed.
+
+
+All important commands should be added to README.md
