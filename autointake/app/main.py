@@ -4,7 +4,7 @@ from sqlalchemy.orm import Session
 from . import crud, models, schemas
 from .database import SessionLocal, engine
 
-models.Base.metadata.create_all(bind=engine)
+# models.Base.metadata.create_all(bind=engine)
 
 app = FastAPI()
 
@@ -24,10 +24,10 @@ async def receive_intake(payload: schemas.IntakeWebhookPayload, db: Session = De
     # Check if patient exists, if not create one
     patient = crud.get_patient_by_radflow_id(db, radflow_patient_id=payload.patient_id)
     if not patient:
-        patient = crud.create_patient(db, radflow_patient_id=payload.patient_id, patient_name=payload.patient_name)
+        patient = crud.create_patient(db, radflow_patient_id=payload.patient_id)
 
     # Create a new intake process
-    intake_process = crud.create_intake_process(db, appointment_id=payload.appointment_id, patient_id=patient.id)
+    intake_process = crud.create_intake_process(db, patient_id=patient.id, payload=payload)
     
     # Here you would add logic to trigger the first step of the intake process,
     # for example, sending an SMS with the lien link.

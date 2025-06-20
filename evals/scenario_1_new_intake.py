@@ -1,10 +1,15 @@
 import requests
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
 
 def simulate_new_intake():
     """
     Simulates sending a new intake to the webhook.
     """
-    url = "http://127.0.0.1:8000/webhook/intake"
+    port = os.getenv("PORT", "8000")
+    url = f"http://127.0.0.1:{port}/webhook/intake"
     
     # Sample intake data
     intake_data = {
@@ -20,13 +25,13 @@ def simulate_new_intake():
             {
                 "cptCode": "72148",
                 "bodyPart": "LUMBAR",
-                "contrast": false
+                "contrast": False
             }
         ],
         "notes": "Patient prefers morning appointments",
         "flags": {
-            "isLienCase": false,
-            "needsTransportation": true
+            "isLienCase": False,
+            "needsTransportation": True
         }
     }
 
@@ -41,4 +46,4 @@ def simulate_new_intake():
         print(f"Error sending webhook: {e}")
 
 if __name__ == "__main__":
-    simulate_new_intake()
+    simulate_new_intake() 
