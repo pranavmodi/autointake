@@ -1,3 +1,6 @@
+[tool.setuptools]
+packages = ["autointake"]
+
 [project]
 name = "autointake"
 version = "0.1.0"
@@ -13,4 +16,5 @@ dependencies = [
     "python-dotenv>=1.1.0",
     "alembic>=1.16.2",
     "twilio>=9.5.0",
+    "celery>=5.4.0",
 ]

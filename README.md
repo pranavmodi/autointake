@@ -51,6 +51,22 @@ This command starts the FastAPI server using uvicorn. The `--reload` flag will a
 uvicorn autointake.main:app --reload
 ```
 
+### Run the Celery Worker
+
+This command starts a Celery worker that will listen for and execute the asynchronous tasks, such as sending an SMS.
+
+```bash
+celery -A autointake.app.celery_app worker --loglevel=INFO
+```
+
+### Run the Celery Beat Scheduler
+
+This command starts the Celery scheduler, which is responsible for triggering the periodic tasks, like checking for reminders. It should be run as a separate service.
+
+```bash
+celery -A autointake.app.celery_app beat --loglevel=INFO
+```
+
 ### Run Tests
 
 To run the tests, use the following command (assuming tests are set up with pytest):
