@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>System Control</title>
+    <style>
+        body { font-family: sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; background-color: #f4f4f9; margin: 0; }
+        .container { text-align: center; padding: 40px; border-radius: 8px; background-color: white; box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
+        h1 { color: #333; }
+        .status { margin: 20px 0; font-size: 1.2em; }
+        .status-on { color: #28a745; font-weight: bold; }
+        .status-off { color: #dc3545; font-weight: bold; }
+        .toggle-button {
+            padding: 15px 30px;
+            font-size: 1em;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .button-on { background-color: #28a745; }
+        .button-on:hover { background-color: #218838; }
+        .button-off { background-color: #dc3545; }
+        .button-off:hover { background-color: #c82333; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>AI Intake System Control</h1>
+        <div class="status">
+            The system is currently: 
+            {% if is_enabled %}
+                <span class="status-on">ON</span>
+            {% else %}
+                <span class="status-off">OFF</span>
+            {% endif %}
+        </div>
+        <form action="/admin/toggle" method="post">
+            {% if is_enabled %}
+                <button type="submit" class="toggle-button button-off">Turn System OFF</button>
+            {% else %}
+                <button type="submit" class="toggle-button button-on">Turn System ON</button>
+            {% endif %}
+        </form>
+    </div>
+</body>
+</html> 

@@ -54,3 +54,32 @@ def create_intake_process(db: Session, patient_id: int, payload: schemas.IntakeW
     db.commit()
     db.refresh(db_intake_process)
     return db_intake_process
+
+# === System Settings CRUD ===
+
+def get_setting(db: Session, key: str) -> models.SystemSettings:
+    """
+    Retrieves a setting from the database by its key.
+    """
+    return db.query(models.SystemSettings).filter(models.SystemSettings.key == key).first()
+
+def get_is_system_enabled(db: Session) -> bool:
+    """
+    A specific helper to check if the intake system is enabled.
+    Returns True if the setting is 'true', otherwise False.
+    """
+    setting = get_setting(db, "intake_system_enabled")
+    if setting:
+        return setting.value.lower() == 'true'
+    return False # Default to disabled if not set for safety
+
+def update_setting(db: Session, key: str, value: str) -> models.SystemSettings:
+    """
+    Updates a setting's value in the database.
+    """
+    db_setting = get_setting(db, key)
+    if db_setting:
+        db_setting.value = value
+        db.commit()
+        db.refresh(db_setting)
+    return db_setting

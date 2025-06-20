@@ -62,3 +62,10 @@ class Study(Base):
     intake_process_id = Column(Integer, ForeignKey("intake_processes.id"))
 
     intake_process = relationship("IntakeProcess", back_populates="studies")
+
+class SystemSettings(Base):
+    __tablename__ = "system_settings"
+
+    id = Column(Integer, primary_key=True, index=True)
+    key = Column(String, unique=True, index=True, nullable=False)
+    value = Column(String, nullable=False)

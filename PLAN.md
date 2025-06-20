@@ -42,15 +42,15 @@ This document outlines the remaining tasks required to fully implement the AI-dr
 
 ## Phase 3: Application Logic
 
-- [ ] **FastAPI Webhook Endpoint (`autointake/app/main.py`)**
-  - [ ] Create a new `/webhooks/radflow/new-order` endpoint.
-  - [ ] Add logic to receive and validate the incoming POST request from RadFlow.
-  - [ ] Inside the endpoint, create the initial `Intake` record in the database.
-  - [ ] Trigger the Celery workflow by calling `start_intake_workflow.delay(...)`.
+- [ ] **Modify Existing Webhook Endpoint (`autointake/app/main.py`)**
+  - [x] The endpoint `/webhook/intake` already exists.
+  - [ ] Update the endpoint to trigger the Celery workflow by calling `start_intake_workflow.delay(...)`.
+  - [ ] Integrate the kill switch logic (see Phase 4).
 
 - [ ] **Flesh out Celery Tasks (`autointake/app/tasks/intake_tasks.py`)**
-  - [ ] **`start_intake_workflow`**: No major changes needed, but ensure it correctly logs the start of the process.
+  - [ ] **`start_intake_workflow`**: No major changes needed.
   - [ ] **`check_for_reminders_and_escalations`**: This is the core logic.
+    - [ ] Integrate the kill switch logic (see Phase 4).
     - [ ] Remove all placeholder code and comments.
     - [ ] Use `SessionLocal` to create a database session.
     - [ ] Fetch all active intakes from the database.
@@ -59,7 +59,22 @@ This document outlines the remaining tasks required to fully implement the AI-dr
     - [ ] If documents are incomplete, execute the escalation logic using the patient's `status` and `last_communication_at` fields, calling the appropriate services (`send_sms`, `voice_service.make_voice_call`, `front_service.notify_intake_coordinator`).
     - [ ] Ensure the `status` and `last_communication_at` fields are updated after every action.
 
-## Phase 4: Testing & Deployment
+## Phase 4: System Control & Administration
+
+- [ ] **Implement System-wide Kill Switch**
+  - [ ] **Database**:
+    - [ ] Add a `SystemSettings` model to `autointake/app/models.py` with `key` and `value` fields.
+    - [ ] Create an Alembic migration for the new table and insert a default setting: `{'key': 'intake_system_enabled', 'value': 'true'}`.
+  - [ ] **CRUD**:
+    - [ ] Create `get_setting(key)` and `update_setting(key, value)` functions in `autointake/app/crud.py`.
+  - [ ] **API Endpoints**:
+    - [ ] Create `GET /admin/status` to fetch the current kill switch state.
+    - [ ] Create `POST /admin/toggle` to update the kill switch state.
+  - [ ] **Web UI**:
+    - [ ] Create a simple HTML page at `/admin` that shows the system status and has a button to toggle it.
+    - [ ] Use FastAPI's `Jinja2Templates` to serve the page.
+
+## Phase 5: Testing & Deployment
 
 - [ ] **Create Evals/Tests (`evals/`)**
   - [ ] Enhance `scenario_1_new_intake.py` to be a full end-to-end test for the happy path.
@@ -68,4 +83,9 @@ This document outlines the remaining tasks required to fully implement the AI-dr
   - [ ] Add a section explaining the full architecture and data flow.
   - [ ] Document all required environment variables.
 - [ ] **Deployment**
-  - [ ] Prepare deployment scripts (e.g., Dockerfile, docker-compose) to run the FastAPI server, Celery worker, and Celery Beat scheduler as separate containers. 
+  - [ ] Prepare deployment scripts (e.g., Dockerfile, docker-compose) to run the FastAPI server, Celery worker, and Celery Beat scheduler as separate containers.
+  - [ ] Modify Existing Webhook Endpoint (`autointake/app/main.py`)
+  - [ ] Flesh out Celery Tasks (`autointake/app/tasks/intake_tasks.py`)
+  - [ ] Create Evals/Tests (`evals/`)
+  - [ ] Update `README.md`
+  - [ ] Deployment 

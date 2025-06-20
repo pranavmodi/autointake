@@ -3,7 +3,8 @@ import logging
 from datetime import datetime, timedelta
 from autointake.app.celery_app import celery_app
 from autointake.app.services.sms_service import send_sms
-# from autointake.app.database import SessionLocal
+from autointake.app.database import SessionLocal
+from autointake.app.crud import get_is_system_enabled
 # from autointake.app.models import Intake  # Assuming you have an Intake model
 
 # Placeholder for a voice call service
@@ -38,6 +39,13 @@ def check_for_reminders_and_escalations():
     A periodic task run by Celery Beat to check on the status of all active intakes.
     It runs every 5 minutes.
     """
+    db = SessionLocal()
+    # --- KILL SWITCH CHECK ---
+    if not get_is_system_enabled(db):
+        logging.warning("System is disabled. Skipping reminder check.")
+        db.close()
+        return
+
     logging.info("Running periodic check for intake reminders and escalations...")
 
     # Get timing configurations from environment variables, in minutes.
@@ -45,12 +53,11 @@ def check_for_reminders_and_escalations():
     reminder_delay_mins = int(os.getenv("INTAKE_REMINDER_DELAY_MINS", 24 * 60))
     voice_escalation_mins = int(os.getenv("INTAKE_VOICE_ESCALATION_MINS", 48 * 60))
     # NOTE: The env var name ends in _HOURS, but the value is expected in minutes (e.g., 4320 for 72h)
-    human_escalation_mins = int(os.getenv("INTAKE_HUMAN_ESCALATION_MINS", 72 * 60))
+    human_escalation_mins = int(os.getenv("INTAKE_HUMAN_ESCALATION_HOURS", 72 * 60))
 
     # --- Database logic would go here ---
     # The following is a conceptual example of what the logic would look like.
 
-    # db = SessionLocal()
     # active_intakes = db.query(Intake).filter(Intake.status != "COMPLETED").all()
     active_intakes = []  # Placeholder
 
@@ -76,4 +83,4 @@ def check_for_reminders_and_escalations():
             send_sms(to=intake.patient_phone_number, body="This is a reminder to complete your intake forms.")
             # Update intake status in DB
 
-    # db.close() 
+    db.close() 
