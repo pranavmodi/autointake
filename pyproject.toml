@@ -12,8 +12,5 @@ dependencies = [
     "psycopg2-binary>=2.9.10",
     "python-dotenv>=1.1.0",
     "alembic>=1.16.2",
+    "twilio>=9.5.0",
 ]
-
-[project.scripts]
-start = "uvicorn main:app --reload"
-test = "python test_intake.py"

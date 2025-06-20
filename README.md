@@ -27,30 +27,34 @@ Follow these instructions to get the project up and running on your local machin
     ```
 
 3.  **Install dependencies:**
-    Use `uv` to install the required packages.
+    Use `uv` to install the required packages from `pyproject.toml`.
     ```bash
-    uv pip install -r requirements.txt
+    uv pip install -e .
     ```
 
 4.  **Set up environment variables:**
-    Create a `.env` file in the `autointake` directory by copying the example file. This file contains the database connection string and other secrets.
+    Create a `.env` file in the root directory. This file will contain secrets like database connection strings and API keys. You can start by copying the example if one exists, or create a new one.
+
     ```bash
-    cp .env.example .env
+    # Create an empty .env file
+    touch .env
     ```
-    Then, edit the `.env` file with your actual database credentials.
+    Then, edit the `.env` file with your actual credentials.
 
-## Running the Application
+## Available Commands
 
-This command starts the FastAPI server. The `--reload` flag will automatically restart the server when you make changes to the code.
+### Run the Application
+
+This command starts the FastAPI server using uvicorn. The `--reload` flag will automatically restart the server when you make changes to the code.
 
 ```bash
-python autointake/main.py
+uvicorn autointake.main:app --reload
 ```
 
-## Running Tests
+### Run Tests
 
-To run the tests, use the following command:
+To run the tests, use the following command (assuming tests are set up with pytest):
 
 ```bash
-pytest
+python evals/main_eval.py
 ```
